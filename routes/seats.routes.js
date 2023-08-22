@@ -18,29 +18,32 @@ router.route('/seats/:id').get((req, res) => {
 });
 
 router.route('/seats').post((req, res) => {
-  const { author, text } = req.body;
-
-  if(!author && !text) res.status(400).json({ message: 'Error' });
+  const { client, email, day, seat} = req.body;
+  if (db.seats.find((obj) => obj.day === parseInt(day) && obj.seat === parseInt(seat))) {
+    res.status(400).json({ message: "The slot is already taken..." });
+  }
 
   db.seats.push({
     id: Math.floor(Math.random() * (1000 - db.seats.length + 1) + db.seats.length + 1),
-    author: author,
-    text: text
+    day: day,
+    seat: seat,
+    client: client,
+    email: email
   });
 
   res.status(201).json({ message: 'OK' });
 });
 
 router.route('/seats/:id').put((req, res) => {
-  const { author, text } = req.body;
+  const { day, seat } = req.body;
   let match = false;
 
-  if(!author && !text) res.json({ message: 'Error' });
+  if(!day && !seat) res.json({ message: 'Error' });
 
   db.seats.forEach((obj) => {
     if(obj.id === parseInt(req.params.id)) {
-      obj.author = author;
-      obj.text = text;
+      obj.day = day;
+      obj.seat = seat;
 
       res.json({ message: 'OK' });
       match = true;
@@ -52,8 +55,6 @@ router.route('/seats/:id').put((req, res) => {
 
 router.route('/seats/:id').delete((req, res) => {
   db.seats = db.seats.filter((obj) => {
-    console.log(parseInt(req.params.id));
-    console.log('obj.id: ', obj.id);
     return obj.id !== parseInt(req.params.id);
   });
   res.json({ message: 'OK' })

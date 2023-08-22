@@ -52,8 +52,6 @@ router.route('/testimonials/:id').put((req, res) => {
 
 router.route('/testimonials/:id').delete((req, res) => {
   db.testimionals = db.testimionals.filter((obj) => {
-    console.log(parseInt(req.params.id));
-    console.log('obj.id: ', obj.id);
     return obj.id !== parseInt(req.params.id);
   });
   res.json({ message: 'OK' })

@@ -52,8 +52,6 @@ router.route('/concerts/:id').put((req, res) => {
 
 router.route('/concerts/:id').delete((req, res) => {
   db.concerts = db.concerts.filter((obj) => {
-    console.log(parseInt(req.params.id));
-    console.log('obj.id: ', obj.id);
     return obj.id !== parseInt(req.params.id);
   });
   res.json({ message: 'OK' })
