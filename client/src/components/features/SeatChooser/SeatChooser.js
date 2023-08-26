@@ -15,6 +15,10 @@ const SeatChooser = ({ chosenDay, chosenSeat, updateSeat }) => {
 
     const socket = io(process.env.NODE_ENV === 'production' ? '' : 'ws://localhost:8000', { transports: ['websocket'] });
     socket.on('seatsUpdated', (seats) => { dispatchSeats(seats); });
+
+    return () => {
+      socket.disconnect();
+    }
   }, []);
 
   const dispatchSeats = (seats) => { dispatch(loadSeats(seats)) };
