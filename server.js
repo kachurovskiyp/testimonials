@@ -33,9 +33,15 @@ app.get('*', (req, res) => {
 
 app.use((req, res) => {
   res.status(404).send({ message: 'Not found...' });
-})
+});
 
-mongoose.connect('mongodb://localhost:27017/NewWaveDB', { useNewUrlParser: true });
+const NODE_ENV = process.env.NODE_ENV;
+let dbURI = '';
+
+if(NODE_ENV === 'test') dbURI = 'mongodb://localhost:27017/NewWaveDB-test';
+else dbURI = 'mongodb://localhost:27017/NewWaveDB';
+
+mongoose.connect(dbURI, { useNewUrlParser: true });
 const db = mongoose.connection;
 
 db.once('open', () => {
@@ -52,3 +58,5 @@ const io = socket(server);
 io.on('connection', (socket) => {
   console.log('New socket');
 });
+
+module.exports = server;

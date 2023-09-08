@@ -1,8 +1,24 @@
 const Concert = require('../models/concerts.model');
+const Seat = require('../models/seats.model');
 
 exports.getAll = async (req, res) => {
   try {
-    res.json(await Concert.find());
+    const concerts = await Concert.find();
+    const concertsFull = [];
+    const seats = await Seat.find();
+
+    concerts.forEach((concert) => {
+      concertsFull.push( {
+        _id: concert.id,
+        performer: concert.performer,
+        genre: concert.genre,
+        price: concert.price,
+        day: concert.day,
+        image: concert.image,
+        tickets: seats.filter(seat => concert.day === seat.day).length
+      })
+    });
+    res.json(concertsFull);
   }
   catch (err) {
     res.status(500).json({ message: err });
