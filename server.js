@@ -1,6 +1,7 @@
 const express = require('express');
 const path = require('path');
 const cors = require('cors');
+const helmet = require('helmet');
 const socket = require("socket.io");
 const mongoose = require('mongoose');
 
@@ -10,6 +11,7 @@ const seatsRoutes = require('./routes/seats.routes');
 
 const app = express();
 app.use(cors());
+app.use(helmet());
 
 
 // Serve static files from the React app
@@ -39,6 +41,7 @@ const NODE_ENV = process.env.NODE_ENV;
 let dbURI = '';
 
 if(NODE_ENV === 'test') dbURI = 'mongodb://localhost:27017/NewWaveDB-test';
+else if(NODE_ENV === 'production') `mongodb+srv://NewWaveDB:${process.env.DB_PASS}@cluster0.tvjci.mongodb.net/BulletinBoard?retryWrites=true&w=majority`;
 else dbURI = 'mongodb://localhost:27017/NewWaveDB';
 
 mongoose.connect(dbURI, { useNewUrlParser: true });
